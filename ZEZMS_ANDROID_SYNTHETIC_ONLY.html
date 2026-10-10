@@ -1,0 +1,449 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; media-src 'none'; font-src 'none'; worker-src 'none'; object-src 'none'; form-action 'none'; base-uri 'none'">
+<title>ZEZMS — Android Synthetic Preservation Test (NO LIVE DATA)</title>
+<style>
+body{font:16px/1.5 system-ui,sans-serif;background:#0b1424;color:#eaf1fa;max-width:730px;margin:36px auto;padding:0 19px}h1{font-size:1.6rem}h2{font-size:1.1rem}p{max-width:68ch}button{background:#17667e;color:white;border:1px solid #a2c1d0;padding:12px 16px;border-radius:9px;cursor:pointer;margin:4px 8px 10px 0}button:disabled{opacity:.55}pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:15px;border:1px solid #4b6076;border-radius:9px;background:#13243b}strong{color:#f1cd79}.status{margin:14px 0;padding:15px;background:#14283d;border:1px solid #4d6b80;border-radius:10px}.muted{opacity:.8;font-size:.92rem}
+
+@media(max-width:520px){body{margin:14px auto;padding:0 13px;font-size:15px}h1{font-size:1.35rem}button{min-height:46px;width:100%;margin:5px 0}input[type=password],input[type=file]{width:100%;box-sizing:border-box;min-height:44px;font-size:16px;padding:8px;background:#13223a;color:#fff;border:1px solid #8093ad;border-radius:7px}.status{max-width:100%;overflow-wrap:anywhere}}
+</style></head><body><h1>ZEZMS Phase B — Android synthetic preservation test</h1>
+<p><strong>TEST ONLY. NOT THE TRADEFLOW APP. NO LIVE PHONE DATA.</strong></p>
+<p>This standalone test uses only nine INVENTED operations. It never opens TradeFlow, signs in, connects to Supabase or reads existing business data. Perform on a different Android phone — NOT CAMON 17P Repaired. Open this test in a private/incognito tab if using the GitHub preview site.</p>
+<p>Choose <b>Run synthetic encryption test</b>. A PASS confirms this browser can perform the AES-GCM/PBKDF2 operation. Afterward you may open the real Review 2 dialog against the same invented data to inspect its layout.</p>
+<button id="run" type="button">Run synthetic encryption test</button><button id="show" type="button">Open synthetic review dialog</button>
+<div id="result" role="status" aria-live="polite" class="status">Not tested.</div>
+<p class="muted">The synthetic dialog requires an invented 20+ character phrase of your choice. Do not enter your real passwords or passphrases here. Any download made from this test is labelled SYNTHETIC_TEST_ONLY.</p>
+<p class="muted">If the browser says secure context or WebCrypto unavailable, report STOP. Do not change browser security settings or touch CAMON 17P to make this test work. On Android, saved files are usually in Downloads and may be named with a number suffix.</p>
+<script>
+'use strict';
+(function(){
+ const DEVICE='60d23b2e-531f-479b-b96f-c8d463f207db';
+ const LC='c6dd588c-c902-4b96-b9f8-6af6e5334c92';
+ const K={queue:'zezms_cloud_sync_m4_queue',state:'zezms_cloud_sync_m4_state',stage:'zezms_m5a4_safe_bootstrap_stage_v1',journal:'zezms_m5a4_safe_bootstrap_journal_v2',rejected:'zezms_cloud_sync_m4_rejected',failed:'zezms_cloud_sync_m4_failed_v2',applied:'zezms_cloud_sync_m4_applied_v2',applyJournal:'zezms_cloud_sync_m4_apply_journal_v2'};
+ const q=[{opId:'SIMULATED-1',kind:'DATABASE_CHANGE',deviceId:DEVICE,patches:[{action:'insert',collection:'kpiHistory',value:{synthetic:true}}, {action:'root-set',root:'settings',value:{synthetic:true,passwordHash:'INVENTED_TEST_VALUE'}}]}];
+ for(let i=2;i<=9;i++)q.push({opId:'SIMULATED-'+i,kind:'SHARED_DEVICE_DIRECTORY',deviceId:DEVICE,patches:[{action:'root-set',root:'sharedDeviceDirectory',value:{synthetic:true,index:i}}]});
+ const entries=new Map([[K.queue,JSON.stringify(q)],[K.state,JSON.stringify({deviceId:DEVICE,cursor:0,liveSyncEnabled:false})],[K.stage,JSON.stringify({version:1,deviceId:DEVICE,lifecycleId:LC,cursor:3245,candidate:{products:[]},fingerprint:{operationalHash:'SIMULATED_HASH'}})],[K.journal,JSON.stringify({version:2,deviceId:DEVICE,lifecycleId:LC,stage:'VERIFYING'})],[K.rejected,'[]'],[K.failed,'[]'],[K.applied,'{}']]);
+ const counters={reads:0,writes:0,downloadClicks:0};
+ const fakeStorage={getItem(k){counters.reads++;return entries.has(k)?entries.get(k):null;},setItem(){counters.writes++;throw Error('NO_WRITE')},removeItem(){counters.writes++;throw Error('NO_REMOVE')}};
+ const state={deviceId:DEVICE,cursor:0,liveSyncEnabled:false,queueLength:9,failedCount:0};
+ window.ZEZMS={cloudSync:{getState:()=>({...state}),getOutbox:()=>JSON.parse(entries.get(K.queue))}};
+ let storageMockReady=false;
+ try{Object.defineProperty(window,'localStorage',{configurable:true,value:fakeStorage});storageMockReady=window.localStorage===fakeStorage}catch(_){}
+ // Isolated file has no TradeFlow credentials and never reads its browser's real storage.
+ window.__ZEZMS_SYNTHETIC_TEST__=Object.freeze({fakeStorage,counters,queue:()=>JSON.parse(entries.get(K.queue)),storageMockReady});
+}());
+</script>
+
+<script>
+/* ZEZMS Phase B preservation-first REVIEW-ONLY module.
+ * Does not deploy, install, connect to Supabase, write to localStorage, or alter the queue.
+ * Copyright (c) 2026. Review candidate; not production-approved.
+ */
+(function (root, factory) {
+  'use strict';
+  var api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.ZEZMSPhaseBPreservationReview1 = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  const KEYS = Object.freeze({
+    queue: 'zezms_cloud_sync_m4_queue',
+    state: 'zezms_cloud_sync_m4_state',
+    stage: 'zezms_m5a4_safe_bootstrap_stage_v1',
+    journal: 'zezms_m5a4_safe_bootstrap_journal_v2',
+    rejected: 'zezms_cloud_sync_m4_rejected',
+    failed: 'zezms_cloud_sync_m4_failed_v2',
+    applied: 'zezms_cloud_sync_m4_applied_v2',
+    applyJournal: 'zezms_cloud_sync_m4_apply_journal_v2'
+  });
+  const REQUIRED = Object.freeze(['queue', 'state', 'stage', 'journal']);
+  const EXACT_DEVICE = '60d23b2e-531f-479b-b96f-c8d463f207db';
+  const EXACT_LIFECYCLE = 'c6dd588c-c902-4b96-b9f8-6af6e5334c92';
+  const CURSOR = 3245;
+  const QUEUE_COUNT = 9;
+  const MAX_TOTAL_BYTES = 32 * 1024 * 1024;
+  const MAX_ARCHIVE_BYTES = 65 * 1024 * 1024;
+  const ITERATIONS = 600000;
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder('utf-8', { fatal: true });
+
+  function fail() { throw new Error('PRESERVATION_STOP_UNVERIFIED'); }
+  function isRecord(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+  function nonempty(x) { return typeof x === 'string' && x.length > 0; }
+  function parse(v) { try { return JSON.parse(v); } catch (_) { fail(); } }
+  function requirePassphrase(passphrase) {
+    if (typeof passphrase !== 'string' || passphrase.length < 20 || passphrase.length > 1024) fail();
+  }
+  function requireCrypto(c) {
+    if (!c || !c.subtle || typeof c.getRandomValues !== 'function') fail();
+  }
+  function requireStorage(storage) {
+    if (!storage || typeof storage.getItem !== 'function') fail();
+  }
+  function sourceSnapshot(storage) {
+    const values = Object.create(null);
+    for (const alias of Object.keys(KEYS)) {
+      let value;
+      try { value = storage.getItem(KEYS[alias]); } catch (_) { fail(); }
+      if (value !== null && typeof value !== 'string') fail();
+      values[alias] = value;
+    }
+    return values;
+  }
+  function same(a, b) {
+    return Object.keys(KEYS).every(alias => a[alias] === b[alias]);
+  }
+  function valid(values) {
+    for (const name of REQUIRED) if (!nonempty(values[name])) fail();
+    let totalBytes = 0;
+    for (const name of Object.keys(KEYS)) {
+      if (values[name] !== null) totalBytes += encoder.encode(values[name]).byteLength;
+      if (totalBytes > MAX_TOTAL_BYTES) fail();
+    }
+    const state = parse(values.state);
+    const stage = parse(values.stage);
+    const journal = parse(values.journal);
+    const queue = parse(values.queue);
+    if (!isRecord(state) || !isRecord(stage) || !isRecord(journal) || !Array.isArray(queue)) fail();
+    if (state.deviceId !== EXACT_DEVICE || state.cursor !== 0 || state.liveSyncEnabled !== false ||
+        stage.version !== 1 || stage.deviceId !== EXACT_DEVICE ||
+        stage.lifecycleId !== EXACT_LIFECYCLE || stage.cursor !== CURSOR ||
+        !isRecord(stage.candidate) || !isRecord(stage.fingerprint) ||
+        journal.deviceId !== EXACT_DEVICE || journal.lifecycleId !== EXACT_LIFECYCLE ||
+        queue.length !== QUEUE_COUNT) fail();
+    if (queue[0]?.kind !== 'DATABASE_CHANGE' || !Array.isArray(queue[0]?.patches) ||
+        queue[0].patches.length !== 2 ||
+        !queue[0].patches.some(p => p && p.collection === 'kpiHistory' && p.action === 'insert') ||
+        !queue[0].patches.some(p => p && p.root === 'settings' && p.action === 'root-set')) fail();
+    const opIds = new Set();
+    for (let i = 0; i < queue.length; i++) {
+      const op = queue[i];
+      if (!isRecord(op) || !nonempty(op.opId) || opIds.has(op.opId) ||
+          !Array.isArray(op.patches) || !op.patches.length ||
+          (i > 0 && (op.kind !== 'SHARED_DEVICE_DIRECTORY' || op.patches.length !== 1 ||
+            op.patches[0]?.action !== 'root-set' || op.patches[0]?.root !== 'sharedDeviceDirectory')) ||
+          (nonempty(op.deviceId) && op.deviceId !== EXACT_DEVICE) ||
+          (nonempty(op.originDeviceId) && op.originDeviceId !== EXACT_DEVICE)) fail();
+      opIds.add(op.opId);
+    }
+    if (values.failed !== null && !Array.isArray(parse(values.failed))) fail();
+    if (values.rejected !== null && !Array.isArray(parse(values.rejected))) fail();
+    return { queueCount: queue.length, stageCursor: stage.cursor, byteCount: totalBytes,
+      journalPresent: true, optionalKeyPresence: Object.fromEntries(
+        Object.keys(KEYS).filter(k => !REQUIRED.includes(k)).map(k => [k, values[k] !== null])) };
+  }
+  function toBase64(bytes) {
+    if (typeof Buffer !== 'undefined') return Buffer.from(bytes).toString('base64');
+    let s = '';
+    // Avoid a stack overflow on large arrays and never include plaintext in diagnostic strings.
+    for (let i = 0; i < bytes.length; i += 16384) {
+      s += String.fromCharCode.apply(null, bytes.subarray(i, i + 16384));
+    }
+    return btoa(s);
+  }
+  function fromBase64(value) {
+    if (!nonempty(value) || value.length > MAX_ARCHIVE_BYTES * 2 || !/^[A-Za-z0-9+/]*={0,2}$/.test(value)) fail();
+    try {
+      if (typeof Buffer !== 'undefined') return new Uint8Array(Buffer.from(value, 'base64'));
+      const s = atob(value);
+      const b = new Uint8Array(s.length);
+      for (let i = 0; i < s.length; i++) b[i] = s.charCodeAt(i);
+      return b;
+    } catch (_) { fail(); }
+  }
+  async function derive(c, passphrase, salt, usages) {
+    const master = await c.subtle.importKey('raw', encoder.encode(passphrase), 'PBKDF2', false, ['deriveKey']);
+    return c.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: ITERATIONS, hash: 'SHA-256' },
+      master, { name: 'AES-GCM', length: 256 }, false, usages);
+  }
+  async function rawDigests(c, values) {
+    const digests = Object.create(null);
+    for (const alias of Object.keys(KEYS)) {
+      const raw = values[alias];
+      digests[alias] = raw === null ? null : toBase64(new Uint8Array(await c.subtle.digest('SHA-256', encoder.encode(raw))));
+    }
+    return digests;
+  }
+  function assertRuntimeQueueMatches(snapshot, runtimeReader) {
+    if (typeof runtimeReader !== 'function') fail();
+    let q;
+    try { q = runtimeReader(); } catch (_) { fail(); }
+    if (!Array.isArray(q) || JSON.stringify(q) !== snapshot.queue) fail();
+  }
+  async function seal(storage, c, passphrase, runtimeQueueReader) {
+    requireStorage(storage); requireCrypto(c); requirePassphrase(passphrase);
+    const captured = sourceSnapshot(storage);
+    assertRuntimeQueueMatches(captured, runtimeQueueReader);
+    const validation = valid(captured);
+    // The plaintext payload includes exact serialized storage strings, not a lossy parsed/re-serialized DB.
+    const payload = JSON.stringify({ schema: 'ZEZMS_PRESERVATION_PAYLOAD_V1',
+      keys: KEYS, raw: captured, digests: await rawDigests(c, captured),
+      limits: { expectedDevice: EXACT_DEVICE, expectedLifecycle: EXACT_LIFECYCLE, expectedCursor: CURSOR } });
+    if (!same(captured, sourceSnapshot(storage))) fail();
+    assertRuntimeQueueMatches(captured, runtimeQueueReader);
+    const salt = c.getRandomValues(new Uint8Array(16));
+    const iv = c.getRandomValues(new Uint8Array(12));
+    const key = await derive(c, passphrase, salt, ['encrypt']);
+    if (!same(captured, sourceSnapshot(storage))) fail();
+    assertRuntimeQueueMatches(captured, runtimeQueueReader);
+    const encrypted = new Uint8Array(await c.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoder.encode(payload)));
+    if (!same(captured, sourceSnapshot(storage))) fail();
+    assertRuntimeQueueMatches(captured, runtimeQueueReader);
+    const archive = { format: 'ZEZMS_PHASEB_ENCRYPTED_PRESERVATION_V1',
+      cipher: 'AES-256-GCM', kdf: 'PBKDF2-SHA256', iterations: ITERATIONS,
+      salt: toBase64(salt), iv: toBase64(iv), ciphertext: toBase64(encrypted) };
+    if (JSON.stringify(archive).length > MAX_ARCHIVE_BYTES * 2) fail();
+    return { archive, status: { captureConsistent: true, validated: true,
+      encrypted: true, queueCount: validation.queueCount, stageCursor: validation.stageCursor,
+      optionalKeyPresence: validation.optionalKeyPresence, authorizationToDiscard: false,
+      authorizationToReplay: false, authorizationToActivate: false } };
+  }
+  async function verify(envelope, c, passphrase) {
+    requireCrypto(c); requirePassphrase(passphrase);
+    if (!isRecord(envelope) || envelope.format !== 'ZEZMS_PHASEB_ENCRYPTED_PRESERVATION_V1' ||
+        envelope.cipher !== 'AES-256-GCM' || envelope.kdf !== 'PBKDF2-SHA256' || envelope.iterations !== ITERATIONS) fail();
+    const salt = fromBase64(envelope.salt), iv = fromBase64(envelope.iv), ciphertext = fromBase64(envelope.ciphertext);
+    if (salt.length !== 16 || iv.length !== 12 || !ciphertext.length || ciphertext.length > MAX_ARCHIVE_BYTES) fail();
+    const key = await derive(c, passphrase, salt, ['decrypt']);
+    let payload;
+    try { payload = parse(decoder.decode(await c.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext))); }
+    catch (_) { fail(); }
+    if (!isRecord(payload) || payload.schema !== 'ZEZMS_PRESERVATION_PAYLOAD_V1' ||
+        !isRecord(payload.raw) || !isRecord(payload.keys) || !isRecord(payload.digests)) fail();
+    for (const alias of Object.keys(KEYS)) if (payload.keys[alias] !== KEYS[alias]) fail();
+    const validation = valid(payload.raw);
+    const actualDigests = await rawDigests(c, payload.raw);
+    for (const alias of Object.keys(KEYS)) if (payload.digests[alias] !== actualDigests[alias]) fail();
+    return { verified: true, encryptedArchiveAuthentic: true, queueCount: validation.queueCount,
+      stageCursor: validation.stageCursor, authorizationToDiscard: false,
+      authorizationToReplay: false, authorizationToActivate: false };
+  }
+  function download(archive, doc, urlApi, scheduleRevoke) {
+    // Call ONLY in response to an intentional user click; no automatic download.
+    if (!doc || !urlApi || !archive || typeof scheduleRevoke !== 'function') fail();
+    const blob = new Blob([JSON.stringify(archive)], { type: 'application/json' });
+    const url = urlApi.createObjectURL(blob);
+    const a = doc.createElement('a');
+    try {
+      a.href = url;
+      a.download = 'ZEZMS_CAMON17P_ENCRYPTED_PRESERVATION_v1.json';
+      doc.body.appendChild(a);
+      a.click();
+    } finally {
+      a.remove();
+      // Do not revoke immediately: mobile browsers may still be handing off the file.
+      // A reviewed caller must supply an explicit delayed-revoke scheduler.
+      if (typeof scheduleRevoke === 'function') scheduleRevoke(() => urlApi.revokeObjectURL(url), 120000);
+    }
+    return 'DOWNLOAD_INITIATED_NOT_VERIFIED';
+  }
+  return Object.freeze({ build: 'phaseb-preservation-review1-unapproved',
+    captureAndEncrypt: seal, verifyEncryptedArchive: verify, downloadEncryptedArchive: download });
+}));
+
+</script>
+<script>
+/* Phase B r70Q Preservation Review 2 — REVIEW ONLY.
+ * No startup reads, storage writes, requests, cloud operations or auto-export.
+ * Opens ONLY from a voluntary click on a pending bootstrap card.
+ */
+(function (root) {
+  'use strict';
+  const DEVICE = '60d23b2e-531f-479b-b96f-c8d463f207db';
+  let dialogOpen = false;
+  let generation = 0;
+  let archive = null; // ciphertext ONLY, volatile; never written to persistent storage
+  function stop() { throw new Error('PRESERVATION_STOP_UNVERIFIED'); }
+  function eligible() {
+    const c = root.ZEZMS && root.ZEZMS.cloudSync;
+    if (!root.isSecureContext || !c || typeof c.getState !== 'function' ||
+        typeof c.getOutbox !== 'function' || !root.crypto || !root.crypto.subtle) stop();
+    const s = c.getState();
+    if (!s || s.deviceId !== DEVICE || s.liveSyncEnabled !== false || s.cursor !== 0 ||
+        s.queueLength !== 9 || s.failedCount !== 0) stop();
+    const api = root.ZEZMSPhaseBPreservationReview1;
+    if (!api || typeof api.captureAndEncrypt !== 'function' ||
+        typeof api.downloadEncryptedArchive !== 'function') stop();
+    return { c, api };
+  }
+  function makeNode(tag, label, attrs) {
+    const node = document.createElement(tag);
+    if (label != null) node.textContent = label;
+    if (attrs) Object.keys(attrs).forEach(k => node.setAttribute(k, attrs[k]));
+    return node;
+  }
+  function openDialog() {
+    // No data or storage inspection before explicit activation.
+    if (dialogOpen) return;
+    archive = null;
+    const dialogGeneration=++generation;
+    const overlay = makeNode('div', null, { 'data-phaseb-preservation-dialog': 'review2' });
+    overlay.style.cssText='position:fixed;inset:0;z-index:2147483600;overflow:auto;background:rgba(2,6,23,.94);padding:18px;box-sizing:border-box;color:#f8fafc;font:15px/1.5 system-ui,sans-serif';
+    const panel = makeNode('section', null, { role:'dialog','aria-modal':'true','aria-label':'Review-only encrypted preservation' });
+    panel.style.cssText='max-width:540px;margin:5vh auto;background:#16243b;border:1px solid #64748b;border-radius:12px;padding:22px;box-sizing:border-box';
+    panel.append(makeNode('h2','Preserve CAMON 17P evidence (REVIEW ONLY)'));
+    panel.append(makeNode('p','This protects an encrypted copy only. It does not fix the device or authorize activation. Never upload the archive or passphrase to anyone.'));
+    panel.append(makeNode('p','Enter a strong, unique passphrase of at least 20 characters. Store it separately; forgotten passphrases cannot be recovered.'));
+    const firstLabel = makeNode('label','Passphrase (not saved)');
+    const pass = makeNode('input',null,{type:'password',autocomplete:'off',autocapitalize:'off',spellcheck:'false',minlength:'20','aria-label':'Preservation passphrase'});
+    const secondLabel = makeNode('label','Repeat passphrase');
+    const confirm = makeNode('input',null,{type:'password',autocomplete:'off',autocapitalize:'off',spellcheck:'false',minlength:'20','aria-label':'Confirm preservation passphrase'});
+    for (const field of [pass,confirm]) {
+      field.style.cssText='display:block;width:100%;padding:10px;margin:7px 0 14px;color:#f8fafc;background:#0f172a;border:1px solid #94a3b8;box-sizing:border-box';
+    }
+    firstLabel.append(pass); secondLabel.append(confirm);
+    panel.append(firstLabel,secondLabel);
+    const status=makeNode('p','No preservation has been performed.',{role:'status','aria-live':'polite'});
+    status.style.cssText='white-space:pre-wrap;color:#e2e8f0';
+    const create=makeNode('button','Encrypt local evidence',{type:'button'});
+    const download=makeNode('button','Download encrypted archive',{type:'button'});
+    download.disabled=true;
+    const close=makeNode('button','Close',{type:'button'});
+    for (const btn of [create,download,close]) {
+      btn.style.cssText='margin:6px 8px 6px 0;padding:10px;border-radius:7px;border:1px solid #64748b;background:#155e75;color:#fff;cursor:pointer';
+    }
+    panel.append(create,download,close,status);
+    panel.append(makeNode('p','A download starting is NOT proof that a file was saved. Independently reopen and verify the archive on another trusted computer before any recovery decision.'));
+    overlay.append(panel);
+    document.body.append(overlay);
+    dialogOpen=true;
+    function release() {
+      pass.value='';confirm.value='';archive=null;generation++;
+      overlay.remove();dialogOpen=false;
+    }
+    close.addEventListener('click',release);
+    create.addEventListener('click',async function () {
+      let phrase='';
+      create.disabled=true;download.disabled=true;archive=null;
+      try {
+        const checked=eligible();
+        if (pass.value !== confirm.value || pass.value.length < 20) stop();
+        phrase=pass.value;
+        pass.value='';confirm.value='';
+        status.textContent='Encrypting read-only snapshot locally… Do not navigate away.';
+        const result=await checked.api.captureAndEncrypt(root.localStorage,root.crypto,phrase,()=>checked.c.getOutbox());
+        if (generation !== dialogGeneration) stop();
+        if (!result || !result.status || !result.status.captureConsistent ||
+            !result.status.encrypted || result.status.queueCount !== 9 ||
+            result.status.stageCursor !== 3245 || !result.archive) stop();
+        // Immediately verify the encrypted bytes in memory before enabling download.
+        // This is NOT a substitute for verifying the file actually saved on disk.
+        const verified=await checked.api.verifyEncryptedArchive(result.archive,root.crypto,
+          phrase);
+        phrase='';
+        if (generation !== dialogGeneration) stop();
+        if (!verified || !verified.verified || verified.queueCount !== 9) stop();
+        archive=result.archive;
+        download.disabled=false;
+        status.textContent='Encrypted snapshot verified IN MEMORY. Click Download encrypted archive. Then independently verify the saved file elsewhere. No recovery is authorized.';
+      } catch (_) {
+        if (generation === dialogGeneration) status.textContent='STOP: preservation conditions could not be independently verified. Nothing was deliberately changed. Leave the phone unchanged.';
+        archive=null;
+      } finally {
+        phrase='';
+        if (generation === dialogGeneration) create.disabled=false;
+      }
+    });
+    download.addEventListener('click',function () {
+      try {
+        const checked=eligible();
+        if (!archive) stop();
+        checked.api.downloadEncryptedArchive(archive,document,root.URL,(fn,delay)=>root.setTimeout(fn,delay));
+        status.textContent='DOWNLOAD INITIATED — NOT VERIFIED. Confirm the file exists, copy it to an independent device, and reopen it with the offline verifier. No recovery authorized.';
+      } catch (_) {
+        status.textContent='STOP: encrypted download could not start. Do not modify the original device.';
+      }
+    });
+  }
+  root.ZEZMSPhaseBPreservationReview2 = Object.freeze({ build:'phaseb-preservation-review2-UNAPPROVED',openDialog });
+}(window));
+
+</script>
+<script>
+'use strict';
+(function(){
+ const out=document.getElementById('result');
+ const run=document.getElementById('run');
+ const show=document.getElementById('show');
+ const fixture=window.__ZEZMS_SYNTHETIC_TEST__;
+ const realCore=window.ZEZMSPhaseBPreservationReview1;
+ window.ZEZMSPhaseBPreservationReview1=Object.freeze({
+  captureAndEncrypt:realCore.captureAndEncrypt,
+  verifyEncryptedArchive:realCore.verifyEncryptedArchive,
+  downloadEncryptedArchive:function(envelope,doc,urlApi,schedule){
+    const b=new Blob([JSON.stringify(envelope)],{type:'application/json'});
+    const url=urlApi.createObjectURL(b);
+    const a=doc.createElement('a');a.href=url;
+    a.download='ZEZMS_SYNTHETIC_TEST_ONLY.json';doc.body.appendChild(a);
+    try { a.click();fixture.counters.downloadClicks++; }
+    finally {a.remove();schedule(()=>urlApi.revokeObjectURL(url),120000)}
+    return 'DOWNLOAD_INITIATED_NOT_VERIFIED';
+  }
+ });
+ const testphrase='SIMULATED-MULTIWORD-PASSPHRASE-2026-NOT-SECRET';
+ async function doTest(){
+  run.disabled=true;out.textContent='Running entirely offline; browser crypto may take several seconds…';
+  try{
+   if(!window.isSecureContext||!window.crypto||!window.crypto.subtle) throw Error('Secure WebCrypto unavailable in this browser/open method');
+   if(!fixture.storageMockReady)throw Error('Synthetic storage isolation could not be established');
+   if(fixture.counters.writes!==0)throw Error('Unexpected storage write before test');
+   const result=await realCore.captureAndEncrypt(fixture.fakeStorage,window.crypto,testphrase,fixture.queue);
+   if(!result?.status?.captureConsistent||result.status.queueCount!==9)throw Error('Capture status invalid');
+   const envelopeText=JSON.stringify(result.archive);
+   if(envelopeText.includes('INVENTED_TEST_VALUE')||envelopeText.includes('SIMULATED-1'))throw Error('Unencrypted payload exposed');
+   const verified=await realCore.verifyEncryptedArchive(result.archive,window.crypto,testphrase);
+   if(!verified?.verified||verified.queueCount!==9||verified.stageCursor!==3245)throw Error('Decryption verification failed');
+   if(fixture.counters.writes!==0)throw Error('Storage mutation detected');
+   out.textContent='PASS — actual browser WebCrypto AES-256-GCM/PBKDF2 encryption + decryption of 9 INVENTED operations, no synthetic storage writes, no network requests from test code.\nThis does NOT validate CAMON 17P data or authorize deployment/recovery.';
+  }catch(e){out.textContent='STOP — '+String(e&&e.message||'Test unavailable')+'\nDo not alter browser settings or any real TradeFlow device.';}
+  finally{run.disabled=false;}
+ }
+ run.addEventListener('click',doTest);
+ show.addEventListener('click',function(){
+  if(!fixture.storageMockReady||!window.isSecureContext||!window.crypto?.subtle){out.textContent='STOP — secure WebCrypto or synthetic isolation unavailable.';return;}
+  window.ZEZMSPhaseBPreservationReview2.openDialog();
+ });
+}());
+</script>
+
+<section id="androidVerify" style="border-top:1px solid #546780;margin-top:22px;padding-top:16px">
+<h2>Android saved-file verification (invented data only)</h2>
+<p>After clicking <b>Download encrypted archive</b> in the synthetic dialog, open Android Downloads and confirm a <code>ZEZMS_SYNTHETIC_TEST_ONLY.json</code> file exists. Then return here, choose the saved file and enter the same invented passphrase to verify the file you actually saved.</p>
+<label for="savedArchive">Select the downloaded synthetic JSON file</label><br>
+<input id="savedArchive" type="file" accept=".json,application/json" style="display:block;margin:7px 0 12px;max-width:100%"><br>
+<label for="savedPass">Invented test passphrase (not stored)</label><br>
+<input id="savedPass" type="password" autocomplete="off" spellcheck="false" style="display:block;margin:7px 0 12px;min-width:min(100%,300px);max-width:100%"><br>
+<button id="verifySaved" type="button">Verify saved synthetic file on this phone</button>
+<div id="savedResult" class="status" role="status" aria-live="polite">Saved-file verification not started.</div>
+<p class="muted">Never choose a real TradeFlow backup, never enter a real password and never upload an archive or passphrase to anyone. This test runs locally in the browser, without network calls.</p>
+</section>
+
+<script>
+(function(){
+ 'use strict';
+ const file=document.getElementById('savedArchive');
+ const pass=document.getElementById('savedPass');
+ const button=document.getElementById('verifySaved');
+ const result=document.getElementById('savedResult');
+ button.addEventListener('click',async function(){
+  button.disabled=true;
+  result.textContent='Checking the file you selected using local WebCrypto…';
+  try{
+   if(!window.isSecureContext||!window.crypto?.subtle)throw new Error('Secure WebCrypto unavailable');
+   const chosen=file.files&&file.files[0];
+   if(!chosen||chosen.size<120||chosen.size>65*1024*1024)throw new Error('Select a valid non-empty synthetic JSON download');
+   if(!/^ZEZMS_SYNTHETIC_TEST_ONLY(?: \(\d+\))?\.json$/i.test(chosen.name))throw new Error('Select ONLY ZEZMS_SYNTHETIC_TEST_ONLY.json');
+   const phrase=pass.value;
+   if(phrase.length<20)throw new Error('Use the invented 20+ character test passphrase used to encrypt');
+   const text=await chosen.text();
+   const data=JSON.parse(text);
+   if(!data||data.format!=='ZEZMS_PHASEB_ENCRYPTED_PRESERVATION_V1'||data.cipher!=='AES-256-GCM'||data.kdf!=='PBKDF2-SHA256')throw new Error('Unexpected synthetic encryption format');
+   const verdict=await window.ZEZMSPhaseBPreservationReview1.verifyEncryptedArchive(data,window.crypto,phrase);
+   if(!verdict?.verified||verdict.queueCount!==9||verdict.stageCursor!==3245)throw new Error('Synthetic file verification failed');
+   result.textContent='PASS — Downloaded Android JSON file reopened and decrypted correctly: 9 INVENTED operations, stage cursor 3245. No production data was accessed. This is NOT a live deployment or recovery approval.';
+  }catch(_){result.textContent='STOP — The selected file could not be independently verified. Check the invented passphrase and saved file; leave all real devices unchanged.';}
+  finally{pass.value='';button.disabled=false;}
+ });
+}());
+</script>
+</body></html>
